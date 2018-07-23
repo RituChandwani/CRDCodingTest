@@ -23,6 +23,14 @@ public class PortfolioOperations {
 	
 	DBOperations dbOperations=new DBOperations();
 	
+	/*
+	 * This method sells the stock by calculating transaction amount using differencePercent and totalPortfolioAmt
+	 * It puts the record of selling worth transactionAmt in ORD table
+	 * It calculates the updatedAmt,
+	 * if the updatedAmt is zero, record is removed from the Holding table
+	 * else record is updated with new amount still left in the Holding Table
+	 */
+	
 	public Boolean sellStock(Double differencePercent, Double holdingAmt, String stockName, Double totalPortfolioAmt) throws SQLException, ClassNotFoundException {
 		
 		Connection conn=dbOperations.createorGetDBConnection();
@@ -50,12 +58,23 @@ public class PortfolioOperations {
 	        }
 	    } finally {
 	        conn.setAutoCommit(true);
+	        
 	    }
 		return Boolean.TRUE;
 		
 		
 	}
 
+	/**
+	 * This method buys a new stock whose entry we received from Model Table and
+	 * insert a new record in the Holding table with the amount matching the model percent.
+	 * @param differencePercent
+	 * @param totalPortfolioAmt
+	 * @param stockName
+	 * @return
+	 * @throws SQLException
+	 * @throws ClassNotFoundException
+	 */
 	public Boolean buyNewStock(Double differencePercent,
 		Double totalPortfolioAmt, String stockName) throws SQLException, ClassNotFoundException {
 		
@@ -78,10 +97,16 @@ public class PortfolioOperations {
 	        }
 	    } finally {
 	        conn.setAutoCommit(true);
+	        
 	    }
 		return Boolean.TRUE;
 	}
 
+	/*
+	 * This method buys the existing stock to match the mdoel percent.
+	 * It puts the buy record in the ORD table
+	 * And update the HOlding table with the new AMT adding up the bought stocks.
+	 */
 	public Boolean buyExistingStock(Double differencePercent,
 			Double holdingAmt, String stockName, Double totalPortfolioAmt) throws SQLException, ClassNotFoundException {
 		
@@ -104,8 +129,18 @@ public class PortfolioOperations {
 	        }
 	    } finally {
 	        conn.setAutoCommit(true);
+	        
 	    }
 		return Boolean.TRUE;
+	}
+	
+	/**
+	 * This methos closes the database connection and frees up the resource
+	 * @throws ClassNotFoundException
+	 * @throws SQLException
+	 */
+	public void releaseResources() throws ClassNotFoundException, SQLException{
+		dbOperations.createorGetDBConnection().close();
 	}
 
 

@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.crd.utils.DBConstants;
 import com.crd.utils.DBUtils;
 import com.crd.utils.IQueryConstants;
 
@@ -18,15 +19,18 @@ public class DBOperations {
 	
 	public Connection createorGetDBConnection() throws ClassNotFoundException, SQLException{
 		
-		if(conn == null){
+		if(conn == null || conn.isClosed()){
 		conn=DBUtils.getDatabaseConnection();
 		}
 		return conn;
 	}
 	
+	/*
+	 * This method fetches the details of all the stocks by putting full join Holding and Model Table	
+	 */
+	public List getPortfolioDetails() throws SQLException, ClassNotFoundException{
 		
-	public List getPortfolioDetails() throws SQLException{
-		
+		Connection conn=createorGetDBConnection();
 		List<HashMap> stockDetails=new ArrayList<HashMap>();
 		String query=IQueryConstants.GET_PORTFOLIO_DETAILS;
 		PreparedStatement pstmt = conn.prepareStatement(query);
@@ -36,15 +40,11 @@ public class DBOperations {
 			rs=pstmt.getResultSet();
 			while(rs.next()){
 				Map stockMap=new HashMap();
-				String SEC=rs.getString(1);
-				Double AMT=rs.getDouble(2);
-				Double HOLDINGPERCENT=rs.getDouble(3);
-				Double MODELPERCENT=rs.getDouble(4);
-				
-				stockMap.put("SEC", SEC);
-				stockMap.put("AMT", AMT);
-				stockMap.put("MODELPERCENT", MODELPERCENT);
-				stockMap.put("HOLDINGPERCENT", HOLDINGPERCENT);
+								
+				stockMap.put(DBConstants.SEC, rs.getString(DBConstants.SEC));
+				stockMap.put(DBConstants.AMT, rs.getDouble(DBConstants.AMT));
+				stockMap.put(DBConstants.HOLDINGPERCENT, rs.getDouble(DBConstants.HOLDINGPERCENT));
+				stockMap.put(DBConstants.MODELPERCENT, rs.getDouble(DBConstants.MODELPERCENT));
 				stockDetails.add((HashMap) stockMap); 
 				
 			}
@@ -54,8 +54,13 @@ public class DBOperations {
 		
 	}
 
+	/*
+	 * This method inserts all the transactions(buy/sell) in ord table for tracking
+	 */
 	public Boolean addRecordInOrders(String stockName, String SELL_STOCK,
-			Double transactionAmt) throws SQLException {
+			Double transactionAmt) throws SQLException, ClassNotFoundException {
+		
+		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.RECORD_ORD_INSERT;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setString(1, stockName);
@@ -65,8 +70,11 @@ public class DBOperations {
 		return Boolean.TRUE;
 	}
 
-
-	public Boolean removeRecordFromHolding(String stockName) throws SQLException {
+	/*
+	 * This method remove the entry of the stock from the Holding table if all the amount has been sold as it didnt find record in Model Table 
+	 */
+	public Boolean removeRecordFromHolding(String stockName) throws SQLException, ClassNotFoundException {
+		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.REMOVE_HOLDING_RECORD;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setString(1, stockName);
@@ -75,7 +83,11 @@ public class DBOperations {
 	}
 
 
-	public Boolean updateRecordInHolding(String stockName, Double updatedAmt) throws SQLException {
+	/*
+	 * This method update the amount of stock in Holding table after the buy/sell of the stock
+	 */
+	public Boolean updateRecordInHolding(String stockName, Double updatedAmt) throws SQLException, ClassNotFoundException {
+		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.UPDATE_HOLDING_RECORD;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setDouble(1, updatedAmt);
@@ -85,8 +97,11 @@ public class DBOperations {
 		
 	}
 
-
-	public Double getTotalPortfolioAmount() throws SQLException {
+    /*
+     * This method queries the Holding table to get the sum of total amount present in the table
+     */
+	public Double getTotalPortfolioAmount() throws SQLException, ClassNotFoundException {
+		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.TOTAL_PORTFOLIO_AMT;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		ResultSet rs=null;
@@ -94,15 +109,18 @@ public class DBOperations {
 		if(isResult){
 			rs=pstmt.getResultSet();
 			while(rs.next()){
-				Double totalAmt=rs.getDouble(1);
+				Double totalAmt=rs.getDouble(DBConstants.TOTALAMT);
 				return totalAmt;
 			}
 		}
 		return null;
 	}
 
-
-	public Boolean addRecordInHolding(String stockName, Double newHoldingAmt) throws SQLException {
+	/*
+	 * this method insert a new stock Record in Holding table which id found from Model Table
+	 */
+	public Boolean addRecordInHolding(String stockName, Double newHoldingAmt) throws SQLException, ClassNotFoundException {
+		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.RECORD_HOLDING_INSERT;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setString(1, stockName);

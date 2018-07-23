@@ -18,4 +18,14 @@ public class DBConstants {
 	
 	public static String SELL_STOCK = "S";
 	
+	public static String SEC="SEC";
+	
+	public static String AMT="AMT";
+	
+	public static String HOLDINGPERCENT="HOLDINGPERCENT";
+	
+	public static String MODELPERCENT="MODELPERCENT";
+	
+	public static String TOTALAMT="TOTALAMT";
+	
 }

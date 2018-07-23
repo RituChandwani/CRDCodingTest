@@ -7,6 +7,9 @@ import java.util.Properties;
 
 public class ResourceUtils {
 
+	/*
+	 * This method reads the DB configuration properties file for the parameters needed for Database Connection and loads them
+	 */
 	public static void initResources() throws IOException {
 		Properties prop = new Properties();
 		InputStream input = null;

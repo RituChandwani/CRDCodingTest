@@ -7,29 +7,30 @@ import java.util.List;
 
 import com.crd.controller.DBOperations;
 import com.crd.controller.PortfolioOperations;
+import com.crd.utils.DBConstants;
 import com.crd.utils.ResourceUtils;
 
 public class Main {
 
 	public static void main(String[] args) {
 		
+		PortfolioOperations portfolioOp =new PortfolioOperations();
+		
 		try {
 		ResourceUtils.initResources();
 				
 		DBOperations dbOperations=new DBOperations();
-		dbOperations.createorGetDBConnection();
-		PortfolioOperations portfolioOp =new PortfolioOperations();
-		
+				
 		Double totalPortfolioAmt= dbOperations.getTotalPortfolioAmount();
 		
 		List<HashMap> stockDetails=dbOperations.getPortfolioDetails();
 			
 			for(HashMap map: stockDetails){
 				
-				Double holdingPercent=(Double) map.get("HOLDINGPERCENT");
-				Double modelPercent=(Double) map.get("MODELPERCENT");
-				Double holdingAmt = (Double) map.get("AMT");
-				String stockName = (String) map.get("SEC");
+				Double holdingPercent=(Double) map.get(DBConstants.HOLDINGPERCENT);
+				Double modelPercent=(Double) map.get(DBConstants.MODELPERCENT);
+				Double holdingAmt = (Double) map.get(DBConstants.AMT);
+				String stockName = (String) map.get(DBConstants.SEC);
 				Double differencePercent = holdingPercent - modelPercent;
 				/**
 				 * if difference is positive Fred needs to sell the stocks,
@@ -49,6 +50,8 @@ public class Main {
 							success=portfolioOp.buyExistingStock(differencePercent,holdingAmt,stockName,totalPortfolioAmt);
 				}
 				
+				
+				
 			}
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -59,6 +62,16 @@ public class Main {
 		} catch(IOException iEx){
 			System.out.println("Resource initialization Failed");
 			iEx.printStackTrace();
+		}finally{
+			try {
+				portfolioOp.releaseResources();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		
