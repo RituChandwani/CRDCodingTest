@@ -17,4 +17,4 @@ if the difference is positive, then it has to sell some percent of stock based o
 
 if the difference us negative, then it has to purchase some percent of stock and if the holding amount is zero that means it is a new stock (present in Model Table) so it has to be newly added in the Holding Table based on the model percent.
 
-Since the buying and selling of the stocks performs database operations on more than one table, we need to ensure that Atomicity is maintained so for that connection.setAutoCommit() is set to FALSE and connection.commit() is called at the end of buyStock() and sellStock() methods and connection.rollback() is called in the catch block if some failure occurs in between
+Since the buying and selling of the stocks performs database operations on more than one table, we need to ensure that Atomicity is maintained so for that connection.setAutoCommit() is set to FALSE and connection.commit() is called at the end of buyStock() and sellStock() methods and connection.rollback() is called in the catch block if some failure occurs in between.
