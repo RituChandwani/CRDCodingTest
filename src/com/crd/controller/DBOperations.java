@@ -57,7 +57,7 @@ public class DBOperations {
 	/*
 	 * This method inserts all the transactions(buy/sell) in ord table for tracking
 	 */
-	public Boolean addRecordInOrders(String stockName, String SELL_STOCK,
+	public void addRecordInOrders(String stockName, String SELL_STOCK,
 			Double transactionAmt) throws SQLException, ClassNotFoundException {
 		
 		Connection conn=createorGetDBConnection();
@@ -67,34 +67,33 @@ public class DBOperations {
 		pstmt.setString(2, SELL_STOCK);
 		pstmt.setDouble(3, transactionAmt);
 		pstmt.executeUpdate();
-		return Boolean.TRUE;
+		
 	}
 
 	/*
 	 * This method remove the entry of the stock from the Holding table if all the amount has been sold as it didnt find record in Model Table 
 	 */
-	public Boolean removeRecordFromHolding(String stockName) throws SQLException, ClassNotFoundException {
+	public void removeRecordFromHolding(String stockName) throws SQLException, ClassNotFoundException {
 		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.REMOVE_HOLDING_RECORD;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setString(1, stockName);
 		pstmt.executeUpdate();
-		return Boolean.TRUE;
+		
 	}
 
 
 	/*
 	 * This method update the amount of stock in Holding table after the buy/sell of the stock
 	 */
-	public Boolean updateRecordInHolding(String stockName, Double updatedAmt) throws SQLException, ClassNotFoundException {
+	public void updateRecordInHolding(String stockName, Double updatedAmt) throws SQLException, ClassNotFoundException {
 		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.UPDATE_HOLDING_RECORD;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setDouble(1, updatedAmt);
 		pstmt.setString(2, stockName);
 		pstmt.executeUpdate();
-		return Boolean.TRUE;
-		
+				
 	}
 
     /*
@@ -119,15 +118,14 @@ public class DBOperations {
 	/*
 	 * this method insert a new stock Record in Holding table which id found from Model Table
 	 */
-	public Boolean addRecordInHolding(String stockName, Double newHoldingAmt) throws SQLException, ClassNotFoundException {
+	public void addRecordInHolding(String stockName, Double newHoldingAmt) throws SQLException, ClassNotFoundException {
 		Connection conn=createorGetDBConnection();
 		String query=IQueryConstants.RECORD_HOLDING_INSERT;
 		PreparedStatement pstmt = conn.prepareStatement(query);
 		pstmt.setString(1, stockName);
 		pstmt.setDouble(2, newHoldingAmt);
 		pstmt.executeUpdate();
-		return Boolean.TRUE;
-		
+				
 	}
 
 }

@@ -37,17 +37,16 @@ public class Main {
 				 * if difference is negative Fred needs to buy the stocks
 				 * if its zero, do Nothing
 				 */
-				Boolean success=Boolean.FALSE;
-				
+								
 				if(differencePercent >0){						
-					 success=portfolioOp.sellStock(differencePercent,holdingAmt,stockName,totalPortfolioAmt);
+					 portfolioOp.sellStock(differencePercent,holdingAmt,stockName,totalPortfolioAmt);
 					
 				}
 				else if(differencePercent < 0){
 						if(holdingAmt == 0)
-							success=portfolioOp.buyNewStock(differencePercent,totalPortfolioAmt,stockName);
+							portfolioOp.buyNewStock(differencePercent,totalPortfolioAmt,stockName);
 						else
-							success=portfolioOp.buyExistingStock(differencePercent,holdingAmt,stockName,totalPortfolioAmt);
+							portfolioOp.buyExistingStock(differencePercent,holdingAmt,stockName,totalPortfolioAmt);
 				}
 				
 				

@@ -31,7 +31,7 @@ public class PortfolioOperations {
 	 * else record is updated with new amount still left in the Holding Table
 	 */
 	
-	public Boolean sellStock(Double differencePercent, Double holdingAmt, String stockName, Double totalPortfolioAmt) throws SQLException, ClassNotFoundException {
+	public void sellStock(Double differencePercent, Double holdingAmt, String stockName, Double totalPortfolioAmt) throws SQLException, ClassNotFoundException {
 		
 		Connection conn=dbOperations.createorGetDBConnection();
 		conn.setAutoCommit(Boolean.FALSE);
@@ -46,6 +46,7 @@ public class PortfolioOperations {
 			dbOperations.updateRecordInHolding(stockName,updatedAmt);
 		}
 		conn.commit();
+		
 		}catch (SQLException e ) {
 	        e.printStackTrace();
 	        if (conn != null) {
@@ -60,7 +61,7 @@ public class PortfolioOperations {
 	        conn.setAutoCommit(true);
 	        
 	    }
-		return Boolean.TRUE;
+		
 		
 		
 	}
@@ -75,7 +76,7 @@ public class PortfolioOperations {
 	 * @throws SQLException
 	 * @throws ClassNotFoundException
 	 */
-	public Boolean buyNewStock(Double differencePercent,
+	public void buyNewStock(Double differencePercent,
 		Double totalPortfolioAmt, String stockName) throws SQLException, ClassNotFoundException {
 		
 		Connection conn=dbOperations.createorGetDBConnection();
@@ -99,7 +100,7 @@ public class PortfolioOperations {
 	        conn.setAutoCommit(true);
 	        
 	    }
-		return Boolean.TRUE;
+		
 	}
 
 	/*
@@ -107,7 +108,7 @@ public class PortfolioOperations {
 	 * It puts the buy record in the ORD table
 	 * And update the HOlding table with the new AMT adding up the bought stocks.
 	 */
-	public Boolean buyExistingStock(Double differencePercent,
+	public void buyExistingStock(Double differencePercent,
 			Double holdingAmt, String stockName, Double totalPortfolioAmt) throws SQLException, ClassNotFoundException {
 		
 		Connection conn=dbOperations.createorGetDBConnection();
@@ -131,7 +132,7 @@ public class PortfolioOperations {
 	        conn.setAutoCommit(true);
 	        
 	    }
-		return Boolean.TRUE;
+		
 	}
 	
 	/**
